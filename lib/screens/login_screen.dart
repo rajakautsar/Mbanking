@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -8,21 +10,52 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  bool _obscurePassword = true; // untuk toggle mata
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
+  bool _obscurePassword = true;
+  bool _isLoading = false;
+
+  Future<void> login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final response = await http.post(
+        Uri.parse("http://10.0.2.2/mbanking-api/login.php"), // ⚡ localhost Android emulator
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "username": usernameController.text,
+          "password": passwordController.text,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+      if (data["success"] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Login berhasil")),
+        );
+        Navigator.pushReplacementNamed(context, '/dashboard');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(data["message"] ?? "Login gagal")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // background mirip desain kamu
-      backgroundColor: const Color(0xFFBEE5FF), // biru muda sedikit padat
+      backgroundColor: const Color(0xFFBEE5FF),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -30,45 +63,32 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo (replace dengan assetmu)
+                // Logo
                 Container(
                   height: 110,
                   width: 110,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.0),
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                  child: Image.asset(
-                    'assets/logo.png',
-                    fit: BoxFit.contain,
-                    // kalau ga ada asset, ganti dengan Icon:
-                    // child: Icon(Icons.account_balance, size: 80, color: Colors.blue[900]),
-                  ),
+                  child: Image.asset('assets/Logo_Nusantara.png'),
                 ),
                 const SizedBox(height: 18),
 
-                // Nama Bank - bisa ganti font
                 const Text(
                   "NUSANTARA BANK",
                   style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                      letterSpacing: 1.4),
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    letterSpacing: 1.4,
+                  ),
                 ),
                 const SizedBox(height: 36),
 
-                // Username / Email
+                // Username
                 TextField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
+                  controller: usernameController,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.8),
-                    labelText: "Username or Email",
-                    hintText: "Enter your username or email",
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                    labelText: "Username",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide.none,
@@ -77,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 14),
 
-                // Password dengan icon mata
+                // Password
                 TextField(
                   controller: passwordController,
                   obscureText: _obscurePassword,
@@ -85,17 +105,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.8),
                     labelText: "Password",
-                    hintText: "Enter your password",
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide.none,
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.black54,
+                        _obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
                       onPressed: () {
                         setState(() {
@@ -105,24 +123,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 20),
 
-                // Forgot Password aligned right
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // tambahkan aksi forgot password nanti
-                    },
-                    child: const Text(
-                      "Forgot Password?",
-                      style: TextStyle(color: Colors.black87),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                // Sign In Button
+                // Login button
                 SizedBox(
                   width: double.infinity,
                   height: 52,
@@ -133,41 +136,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onPressed: () {
-                      // contoh navigasi setelah login sukses
-                      Navigator.pushReplacementNamed(context, '/dashboard');
-                    },
-                    child: const Text(
-                      "Sign In",
-                      style: TextStyle(fontSize: 18),
-                    ),
+                    onPressed: _isLoading ? null : login,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text("Sign In", style: TextStyle(fontSize: 18)),
                   ),
-                ),
-                const SizedBox(height: 22),
-
-                // Register clickable
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Don’t have an account? ",
-                      style: TextStyle(color: Colors.black87),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // pindah ke halaman register
-                        Navigator.pushNamed(context, '/register');
-                      },
-                      child: const Text(
-                        "Register",
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),

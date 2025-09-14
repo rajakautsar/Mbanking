@@ -16,7 +16,7 @@ class DashboardScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF62A8E5),
+                  color: Color.fromARGB(255, 163, 201, 235),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(28),
                     bottomRight: Radius.circular(28),
@@ -30,9 +30,8 @@ class DashboardScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Image.asset(
-                          "assets/logo.png",
-                          height: 60,
-                          width: 60,
+                          'assets/Logo_Nusantara.png',
+                          width: MediaQuery.of(context).size.width * 0.7,
                         ),
                         const SizedBox(height: 12),
                         const Text(
