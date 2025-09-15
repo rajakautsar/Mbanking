@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // route map agar gampang navigasi
+      // Routing aplikasi
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginScreen(),
