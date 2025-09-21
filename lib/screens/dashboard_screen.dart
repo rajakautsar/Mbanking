@@ -1,229 +1,224 @@
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  final String username;
+
+  const DashboardScreen({super.key, required this.username});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Bagian header biru
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 163, 201, 235),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(28),
-                    bottomRight: Radius.circular(28),
-                  ),
+      backgroundColor: const Color(0xFFF5F7FA),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // HEADER
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF4A90E2), Color(0xFF007AFF)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
+              ),
+              child: SafeArea(
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Logo dan salam
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset(
-                          'assets/Logo_Nusantara.png',
-                          width: MediaQuery.of(context).size.width * 0.7,
-                        ),
-                        const SizedBox(height: 12),
                         const Text(
                           "Hello,",
                           style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                            color: Colors.white70,
+                            fontSize: 18,
                           ),
                         ),
-                        const Text(
-                          "Arjun",
-                          style: TextStyle(
-                            fontSize: 24,
+                        Text(
+                          username,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
                           ),
                         ),
                       ],
                     ),
-                    const Spacer(),
-                    // Foto profil
                     const CircleAvatar(
-                      radius: 28,
-                      backgroundImage: AssetImage("assets/profile.jpg"),
+                      radius: 25,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.person, size: 30, color: Colors.blue),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+            ),
 
-              // Kartu Saldo
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF0F2027), Color(0xFF2C5364)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+            const SizedBox(height: 20),
+
+            // CARD SALDO
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF232526), Color(0xFF414345)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
                   ),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "**** **** **** 7218",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      "Silver",
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "\$76.87",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Align(
-                      alignment: Alignment.bottomRight,
-                      child: Icon(
-                        Icons.credit_card,
-                        color: Colors.orangeAccent,
-                        size: 40,
-                      ),
-                    )
-                  ],
-                ),
+                ],
               ),
-              const SizedBox(height: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text("**** **** **** 7218",
+                      style: TextStyle(color: Colors.white70, fontSize: 16)),
+                  SizedBox(height: 10),
+                  Text("Silver",
+                      style: TextStyle(color: Colors.white54, fontSize: 14)),
+                  SizedBox(height: 5),
+                  Text("\$76.87",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
 
-              // Quick Contact
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Quick Contact",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _quickContact(Icons.add, Colors.orange),
-                        _quickContact(Icons.person, Colors.green),
-                        _quickContact(Icons.person_outline, Colors.blue),
-                        _quickContact(Icons.group, Colors.purple),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
+            const SizedBox(height: 25),
 
-              // Transactions
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Transactions",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    _transactionTile("Transaction 1", "-\$12.00", "Today, 08:05 AM"),
-                    _transactionTile("Transaction 2", "-\$9.00", "Today, 08:05 AM"),
-                  ],
-                ),
+            // QUICK MENU
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _quickAction(Icons.send, "Transfer"),
+                  _quickAction(Icons.account_balance_wallet, "Top Up"),
+                  _quickAction(Icons.history, "History"),
+                  _quickAction(Icons.settings, "Settings"),
+                ],
               ),
-            ],
-          ),
+            ),
+
+            const SizedBox(height: 30),
+
+            // RECENT TRANSACTIONS
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Recent Transactions",
+                    style: TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 15),
+                  TransactionTile(
+                      title: "Top Up Gopay", date: "20 Sep 2025", amount: "-\$10.00"),
+                  TransactionTile(
+                      title: "Transfer to BCA", date: "19 Sep 2025", amount: "-\$50.00"),
+                  TransactionTile(
+                      title: "Salary", date: "18 Sep 2025", amount: "+\$200.00"),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _quickContact(IconData icon, Color color) {
-    return Container(
-      height: 60,
-      width: 60,
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Icon(icon, color: color, size: 30),
+  // Quick Action Button
+  Widget _quickAction(IconData icon, String label) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Icon(icon, color: Colors.blue, size: 28),
+        ),
+        const SizedBox(height: 8),
+        Text(label, style: const TextStyle(fontSize: 14)),
+      ],
     );
   }
+}
 
-  Widget _transactionTile(String title, String amount, String time) {
+// TRANSACTION TILE
+class TransactionTile extends StatelessWidget {
+  final String title;
+  final String date;
+  final String amount;
+
+  const TransactionTile(
+      {super.key,
+      required this.title,
+      required this.date,
+      required this.amount});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          )
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
         ],
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            height: 44,
-            width: 44,
-            decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(Icons.receipt_long, color: Colors.blue),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500)),
+              const SizedBox(height: 4),
+              Text(date,
+                  style: const TextStyle(fontSize: 13, color: Colors.grey)),
+            ],
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                const SizedBox(height: 4),
-                Text(time, style: const TextStyle(color: Colors.black54, fontSize: 13)),
-              ],
-            ),
-          ),
-          Text(
-            amount,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.red,
-            ),
-          )
+          Text(amount,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: amount.startsWith("+")
+                      ? Colors.green
+                      : Colors.red)),
         ],
       ),
     );
